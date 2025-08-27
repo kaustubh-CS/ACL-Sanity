@@ -1,0 +1,22 @@
+# Authentication profiles define HOW to inject auth credentials
+profiles:
+  # ContentStack API requires both api_key and access_token headers
+  contentstack_api:
+    type: header
+    name: Api_Key  # Primary auth header (we'll handle access_token separately)
+
+# Role definitions map to specific users/tokens
+roles:
+  # Org 1 Owner - has access to their own org resources
+  org1.owner:
+    profile: contentstack_api
+    tokenEnv: ORG1_API_KEY
+    
+  # Org 2 Owner - cross-org user, may have different access patterns
+  org2.owner:
+    profile: contentstack_api
+    tokenEnv: ORG2_API_KEY
+    
+  # No authentication (for testing unauthorized access)
+  none:
+    profile: none

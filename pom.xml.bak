@@ -1,0 +1,84 @@
+<!-- Maven Project Object Model (POM) file - the core configuration file for Maven projects -->
+<!-- This file defines project metadata, dependencies, build configuration, and plugins -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+  <!-- Specifies the POM model version - always 4.0.0 for Maven 2+ -->
+  <modelVersion>4.0.0</modelVersion>
+  
+  <!-- Project coordinates (GAV - Group, Artifact, Version) that uniquely identify this project -->
+  <groupId>io.example</groupId>                    <!-- Organization/company identifier -->
+  <artifactId>rest-assured-starter</artifactId>   <!-- Project name/identifier -->
+  <version>1.0.0</version>                         <!-- Project version -->
+
+  <!-- Properties section - defines reusable variables/values used throughout the POM -->
+  <properties>
+    <!-- Java compiler source and target versions - using Java 17 -->
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    
+    <!-- Character encoding for source files -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    
+    <!-- Dependency versions - centralized version management -->
+    <junit.jupiter.version>5.10.2</junit.jupiter.version>    <!-- JUnit 5 testing framework -->
+    <restassured.version>5.4.0</restassured.version>         <!-- REST Assured API testing library -->
+    <slf4j.version>2.0.13</slf4j.version>                    <!-- Simple Logging Facade for Java -->
+  </properties>
+
+  <!-- Dependencies section - external libraries this project needs -->
+  <dependencies>
+    <!-- JUnit Jupiter - Modern testing framework for Java (JUnit 5) -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>                           <!-- Only available during test compilation and execution -->
+    </dependency>
+
+    <!-- REST Assured - Library for testing REST APIs with fluent syntax -->
+    <dependency>
+      <groupId>io.rest-assured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>${restassured.version}</version>
+      <scope>test</scope>                           <!-- Only needed for testing -->
+    </dependency>
+
+    <!-- SLF4J Simple - Lightweight logging implementation -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>test</scope>                           <!-- Logging only during tests -->
+    </dependency>
+  </dependencies>
+
+  <!-- Build configuration - defines how the project should be built -->
+  <build>
+    <plugins>
+      <!-- Maven Surefire Plugin - Executes unit tests during the 'test' phase -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+        <configuration>
+          <!-- Disable Java module path for compatibility -->
+          <useModulePath>false</useModulePath>
+          
+          <!-- JUnit 5 configuration parameters -->
+          <properties>
+            <configurationParameters>
+              <!-- Enable parallel test execution for faster test runs -->
+              junit.jupiter.execution.parallel.enabled = true
+              <!-- Run test methods concurrently by default -->
+              junit.jupiter.execution.parallel.mode.default = concurrent
+              <!-- Use dynamic strategy to determine optimal thread count -->
+              junit.jupiter.execution.parallel.config.strategy = dynamic
+            </configurationParameters>
+          </properties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
