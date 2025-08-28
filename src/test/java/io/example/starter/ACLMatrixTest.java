@@ -78,6 +78,15 @@ public class ACLMatrixTest {
         return testGenerator.generateTestCases(accounts, endpoints);
     }
 
+    private String resolveProfile(Endpoint ep) {
+        if (ep.profile != null && !ep.profile.isBlank()) return ep.profile;
+        if (endpoints != null && endpoints.defaultProfile != null && !endpoints.defaultProfile.isBlank())
+            return endpoints.defaultProfile;
+        String envDefault = EnvironmentService.get("DEFAULT_PROFILE");
+        if (envDefault != null && !envDefault.isBlank()) return envDefault;
+        return "contentstack_api"; // fallback
+    }
+
     @Order(1)
     @ParameterizedTest(name = "{index} => {0}")
     @MethodSource("matrixProvider")
@@ -101,18 +110,20 @@ public class ACLMatrixTest {
             row.url = url;
 
             // Resolve profile & token
-            Profile prof = accounts.profiles.get(mc.ep.profile);
-            if (prof == null && !mc.ep.profile.equalsIgnoreCase("none")) 
-                throw new IllegalStateException("Unknown profile: " + mc.ep.profile);
-            
+            String profileName = resolveProfile(mc.ep);   // null-safe resolution
+            Profile prof = accounts.profiles.get(profileName);
+            if (prof == null && !"none".equalsIgnoreCase(profileName)) {
+                throw new IllegalStateException("Unknown profile: " + profileName);
+            }
+
             RoleDef role = accounts.roles.get(mc.roleName);
             if (role == null) throw new IllegalStateException("Unknown role: " + mc.roleName);
 
             RoleDef roleOther = (mc.mixWith == null ? role : accounts.roles.get(mc.mixWith));
 
-            if (!Objects.equals(role.profile, mc.ep.profile) && !"none".equalsIgnoreCase(role.profile)) {
+            if (!Objects.equals(role.profile, profileName) && !"none".equalsIgnoreCase(role.profile)) {
                 System.out.printf("[warn] Role '%s' maps to profile '%s', endpoint expects '%s'%n",
-                        mc.roleName, role.profile, mc.ep.profile);
+                        mc.roleName, role.profile, profileName);
             }
 
             HeaderValues hv = authService.getHeadersForVariant(role, roleOther, mc.variant, mc.roleName, mc.mixWith);
@@ -235,7 +246,8 @@ public class ACLMatrixTest {
 
     @AfterAll
     void writeCsv() throws Exception {
-        reportService.generateCsvReport(RESULTS);
-        reportService.generateMarkdownReport(RESULTS);
+        // reportService.generateCsvReport(RESULTS);
+        // reportService.generateMarkdownReport(RESULTS);
+        reportService.generateHtmlReport(RESULTS);  // Add this line
     }
 }

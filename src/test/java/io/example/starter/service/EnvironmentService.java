@@ -23,7 +23,8 @@ public class EnvironmentService {
     }
     
     public static boolean getBoolean(String key) {
-        return "1".equals(get(key));
+        String value = get(key);
+        return "1".equals(value) || "true".equalsIgnoreCase(value);
     }
     
     public static String mask(String s) {

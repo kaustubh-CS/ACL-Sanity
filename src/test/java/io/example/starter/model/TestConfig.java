@@ -25,6 +25,7 @@ public class TestConfig {
 
     public static class EndpointsConfig {
         public String baseUrl;
+        public String defaultProfile;  // <-- Add this line
         public List<Endpoint> endpoints = new ArrayList<>();
     }
 

@@ -54,6 +54,11 @@ public class AuthenticationService {
         return hv;
     }
     
+    public boolean sendHeader(String name, Endpoint ep) {
+        if (name == null) return false;
+        return headersToSendFor(ep).contains(name.toLowerCase());
+    }
+    
     public Set<String> headersToSendFor(Endpoint ep) {
         LinkedHashSet<String> set = new LinkedHashSet<>();
         List<String> fromYaml = (ep.authHeaders == null ? Collections.emptyList() : ep.authHeaders);
@@ -71,11 +76,6 @@ public class AuthenticationService {
             }
         }
         return set;
-    }
-    
-    public boolean sendHeader(String name, Endpoint ep) {
-        if (name == null) return false;
-        return headersToSendFor(ep).contains(name.toLowerCase());
     }
     
     public String generateIdentityTag(HeaderValues hv) {

@@ -1,3 +1,6 @@
+# Default profile for all endpoints (can be overridden per endpoint)
+defaultProfile: contentstack_api
+
 # Base URL can be overridden by BASE_URL env var
 baseUrl: https://stag-cdn.csnonprod.com
 
@@ -7,7 +10,7 @@ endpoints:
     method: GET
     host: stag-cdn.csnonprod.com
     path: /v3/content_types
-    profile: contentstack_api
+    # profile: contentstack_api
     headers:
       Content-Type: application/json
       # access_token will be added dynamically based on role
@@ -23,7 +26,7 @@ endpoints:
     method: GET
     host: stag-cdn.csnonprod.com
     path: /v3/global_fields
-    profile: contentstack_api
+    # profile: contentstack_api
     headers:
       Content-Type: application/json
       # access_token will be added dynamically based on role
